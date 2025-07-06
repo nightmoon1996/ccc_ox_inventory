@@ -69,14 +69,14 @@ jobs:
 
       - name: Bundle files
         run: |
-          mkdir -p ./temp/ox_inventory
-          mkdir -p ./temp/ox_inventory/web
-          cp ./{server.lua,README.md,LICENSE,fxmanifest.lua,client.lua,init.lua} ./temp/ox_inventory
-          cp -r ./{setup,modules,data,locales} ./temp/ox_inventory
-          cp -r ./web/build ./temp/ox_inventory/web/build
-          cp ./web/LICENSE ./temp/ox_inventory/web/build
-          cp -r ./web/images ./temp/ox_inventory/web/images
-          cd ./temp && zip -r ../ox_inventory.zip ./ox_inventory
+          mkdir -p ./temp/ccc_ox_inventory
+          mkdir -p ./temp/ccc_ox_inventory/web
+          cp ./{server.lua,README.md,LICENSE,fxmanifest.lua,client.lua,init.lua} ./temp/ccc_ox_inventory
+          cp -r ./{setup,modules,data,locales} ./temp/ccc_ox_inventory
+          cp -r ./web/build ./temp/ccc_ox_inventory/web/build
+          cp ./web/LICENSE ./temp/ccc_ox_inventory/web/build
+          cp -r ./web/images ./temp/ccc_ox_inventory/web/images
+          cd ./temp && zip -r ../ccc_ox_inventory.zip ./ccc_ox_inventory
 
       - name: Create Release
         uses: "marvinpinto/action-automatic-releases@v1.2.1"
