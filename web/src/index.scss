@@ -115,6 +115,8 @@ button:active {
   image-rendering: -webkit-optimize-contrast;
 }
 
+
+
 .inventory-wrapper {
   display: flex;
   flex-direction: row;
@@ -273,26 +275,194 @@ button:active {
 
 .inventory-grid-container {
   display: grid;
-  height: $containerSize;
-  grid-template-columns: repeat($gridCols, $gridSize);
-  grid-auto-rows: $gridSize + 0.22vh;
-  gap: $gridGap;
-  overflow-y: scroll;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  max-height: 300px;
+  overflow-y: auto;
+
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
+  }
+}
+
+.player-inventory-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: rgba(0, 0, 0, 0.95);
+  padding: 20px;
+  border-radius: 8px;
+  min-width: 400px;
+}
+
+.player-info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+  .player-info-left {
+    h2 {
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      margin: 0 0 5px 0;
+    }
+
+    .player-info-details {
+      display: flex;
+      gap: 15px;
+      color: #ccc;
+      font-size: 14px;
+
+      .player-info-citizenship {
+        color: #4CAF50;
+      }
+    }
+  }
+
+  .player-info-right {
+    .player-job-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      color: #ccc;
+      font-size: 14px;
+      gap: 2px;
+
+      span:first-child {
+        color: #2196F3;
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+.inventory-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .inventory-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .inventory-section-header-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+
+      h3 {
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        margin: 0;
+      }
+
+      .inventory-section-weight {
+        color: #ccc;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+
+        &::before {
+          content: "⚖️";
+          font-size: 12px;
+        }
+      }
+    }
+
+    .inventory-search-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .inventory-search-input {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+        padding: 8px 12px;
+        color: white;
+        font-size: 14px;
+        width: 200px;
+
+        &::placeholder {
+          color: rgba(255, 255, 255, 0.5);
+        }
+
+        &:focus {
+          outline: none;
+          border-color: #2196F3;
+        }
+      }
+
+      .inventory-search-icons {
+        display: flex;
+        gap: 5px;
+
+        .inventory-search-icon {
+          background: rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 4px;
+          padding: 6px;
+          color: white;
+          font-size: 12px;
+          cursor: pointer;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.2);
+          }
+        }
+      }
+    }
+  }
 }
 
 // inventory slots
 .inventory-slot {
-  background-color: $secondaryColor;
-  background-repeat: no-repeat;
-  background-position: center;
-  border-radius: 2.5%;
-  image-rendering: -webkit-optimize-contrast;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
-  background-size: 7vh;
-  color: $textColor;
-  border-color: rgba(0, 0, 0, 0.2);
-  border-style: inset;
-  border-width: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+
+  // Item slot with item
+  &.has-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
 }
 
 .inventory-slot-label-box {
@@ -510,11 +680,18 @@ button:active {
 }
 
 .weight-bar {
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px inset rgba(0, 0, 0, 0.1);
-  height: 0.8vh;
-  border-radius: 5%;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  height: 6px;
   overflow: hidden;
+  margin: 5px 0;
+
+  .weight-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #FF9800, #F44336);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
 }
 
 .transition-fade-enter {

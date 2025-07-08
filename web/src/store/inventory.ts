@@ -7,7 +7,7 @@ import {
   stackSlotsReducer,
   swapSlotsReducer,
 } from '../reducers';
-import { State } from '../typings';
+import { State, PlayerInfo } from '../typings';
 
 const initialState: State = {
   leftInventory: {
@@ -28,6 +28,7 @@ const initialState: State = {
   itemAmount: 0,
   shiftPressed: false,
   isBusy: false,
+  playerInfo: undefined,
 };
 
 export const inventorySlice = createSlice({
@@ -62,6 +63,9 @@ export const inventorySlice = createSlice({
 
       container.weight = action.payload;
     },
+    setPlayerInfo: (state, action: PayloadAction<PlayerInfo>) => {
+      state.playerInfo = action.payload;
+    }
   },
   extraReducers: (builder) => {
     builder.addMatcher(isPending, (state) => {
@@ -95,10 +99,12 @@ export const {
   stackSlots,
   refreshSlots,
   setContainerWeight,
+  setPlayerInfo,
 } = inventorySlice.actions;
 export const selectLeftInventory = (state: RootState) => state.inventory.leftInventory;
 export const selectRightInventory = (state: RootState) => state.inventory.rightInventory;
 export const selectItemAmount = (state: RootState) => state.inventory.itemAmount;
 export const selectIsBusy = (state: RootState) => state.inventory.isBusy;
+export const selectPlayerInfo = (state: RootState) => state.inventory.playerInfo;
 
 export default inventorySlice.reducer;
