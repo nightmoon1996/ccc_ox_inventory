@@ -21,7 +21,7 @@ const InventoryGrid: React.FC<{ inventory: Inventory }> = ({ inventory }) => {
   const isBusy = useAppSelector((state) => state.inventory.isBusy);
   const playerInfo = useAppSelector(selectPlayerInfo);
 
-  // Filter
+  // Filter items based on search term
   const filteredItems = useMemo(() => {
     if (!searchTerm) return inventory.items;
     return inventory.items.filter(item =>
@@ -36,12 +36,12 @@ const InventoryGrid: React.FC<{ inventory: Inventory }> = ({ inventory }) => {
     }
   }, [entry]);
 
-  // Split inventory
+  // Split inventory into main inventory and backpack for player inventory
   const isPlayerInventory = inventory.type === 'player';
   const mainInventoryItems = isPlayerInventory ? filteredItems.slice(0, 30) : filteredItems;
   const backpackItems = isPlayerInventory ? filteredItems.slice(30) : [];
 
-    const renderInventorySection = (items: typeof inventory.items, title: string, showSearch: boolean = false) => (
+  const renderInventorySection = (items: typeof inventory.items, title: string, showSearch: boolean = false) => (
     <div className="inventory-section">
       <div className="inventory-section-header">
         <div className="inventory-section-header-left">
@@ -90,16 +90,16 @@ const InventoryGrid: React.FC<{ inventory: Inventory }> = ({ inventory }) => {
         {/* Player Info Header */}
         <div className="player-info-header">
           <div className="player-info-left">
-            <h2>{playerInfo ? `${playerInfo.firstName} ${playerInfo.lastName}` : 'Unknown Player'}</h2>
+            <h2>{playerInfo ? `${playerInfo.firstName} ${playerInfo.lastName}` : 'FIRSTNAME LASTNAME'}</h2>
             <div className="player-info-details">
-              <span>ID: {playerInfo ? playerInfo.id : 'Unknown'}</span>
-              <span className="player-info-citizenship">ID: {playerInfo ? playerInfo.citizenship : 'Unknown'}</span>
+              <span>ID: {playerInfo?.id || 1001}</span>
+              <span className="player-info-citizenship">🇺🇸 {playerInfo?.citizenship || 'CITIZENSHIP'}</span>
             </div>
           </div>
           <div className="player-info-right">
             <div className="player-job-info">
-              <span>Job: {playerInfo ? playerInfo.job : 'Unknown'}</span>
-              <span>Rank: {playerInfo ? playerInfo.rank : 'Unknown'}</span>
+              <span>Job: {playerInfo?.job || 'FIB'}</span>
+              <span>Rank: {playerInfo?.rank || 'Rookie'}</span>
             </div>
           </div>
         </div>
