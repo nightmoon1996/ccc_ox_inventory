@@ -120,11 +120,21 @@ button:active {
 .inventory-wrapper {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   height: 100%;
 
   gap: 20px;
+}
+
+.player-inventory-container {
+  margin-right: 36px;
+  order: 2; // Move this after inventory-grid-wrapper
+}
+
+.inventory-grid-wrapper {
+  margin-left: 81px;
+  order: 1; // Move this before player-inventory-container
 }
 
 .inventory-control {
@@ -262,6 +272,8 @@ button:active {
 .inventory-grid-wrapper {
   display: flex;
   flex-direction: column;
+    width: 359px;
+  height: 622px;
   gap: calc($gridGap * 2);
 }
 .inventory-grid-header-wrapper {
@@ -275,12 +287,14 @@ button:active {
 
 .inventory-grid-container {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(6, 1fr);
   gap: 8px;
+  width: 622px;
+  height: 359px;
   padding: 10px;
   background: rgba(0, 0, 0, 0.3);
   border-radius: 6px;
-  max-height: 300px;
   overflow-y: auto;
 
   // Custom scrollbar
@@ -306,12 +320,13 @@ button:active {
 .player-inventory-container {
   display: flex;
   flex-direction: column;
-  background: rgba(30, 30, 35, 0.95);
-  border-radius: 8px;
+  // background: rgba(30, 30, 35, 0.95);
+  // border-radius: 8px;
   padding: 0;
-  width: 450px;
-  max-height: 80vh;
-  overflow: hidden;
+  height: 688px;
+  width: auto;
+  // max-height: 80vh;
+  // overflow: hidden;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -476,7 +491,7 @@ button:active {
   // Grid container
   .inventory-grid-container {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 6px;
     max-height: 200px;
     overflow-y: auto;
@@ -507,8 +522,8 @@ button:active {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 4px;
-  width: 55px;
-  height: 55px;
+  width: 112px;
+  height: 112px;
   display: flex;
   align-items: center;
   justify-content: center;

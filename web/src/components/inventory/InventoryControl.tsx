@@ -38,7 +38,7 @@ const InventoryControl: React.FC = () => {
   return (
     <>
       <UsefulControls infoVisible={infoVisible} setInfoVisible={setInfoVisible} />
-      <div className="inventory-control">
+      {/* <div className="inventory-control">
         <div className="inventory-control-wrapper">
           <input
             className="inventory-control-input"
@@ -57,7 +57,7 @@ const InventoryControl: React.FC = () => {
             {Locale.ui_close || 'Close'}
           </button>
         </div>
-      </div>
+      </div> */}
 
       <button className="useful-controls-button" onClick={() => setInfoVisible(true)}>
         <svg xmlns="http://www.w3.org/2000/svg" height="2em" viewBox="0 0 524 524">
