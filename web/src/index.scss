@@ -319,7 +319,7 @@ button:active {
 
 .player-inventory-container .inventory-grid-container {
   width: auto;
-  height: 509px;
+  height: 230px;
 }
 
 .inventory-grid-wrapper .inventory-grid-container {
@@ -504,7 +504,7 @@ button:active {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 6px;
-    max-height: 200px;
+    max-height: auto;
     overflow-y: auto;
 
     // Custom scrollbar
