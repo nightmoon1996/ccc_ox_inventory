@@ -43,7 +43,7 @@ const Inventory: React.FC = () => {
         inventory.items.forEach(item => {
           if (isSlotWithItem(item)) {
             const url = getItemUrl(item);
-            if (url) {
+            if (url && url !== 'none' && !imagePreloader.isBlacklisted(url)) {
               imagePreloader.preloadImage(url).catch(() => {
                 // Silently fail
               });
@@ -59,9 +59,9 @@ const Inventory: React.FC = () => {
 
     // Also preload all possible item images from the Items store
     Object.keys(Items).forEach(itemName => {
-      if (itemName) { // Add null check
+      if (itemName && Items[itemName]) { // Add null check and ensure item exists
         const url = getItemUrl(itemName);
-        if (url) {
+        if (url && url !== 'none' && !imagePreloader.isBlacklisted(url)) {
           imagePreloader.preloadImage(url).catch(() => {
             // Silently fail
           });

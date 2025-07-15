@@ -68,7 +68,11 @@ const InventoryContext: React.FC = () => {
   };
 
   const groupButtons = (buttons: any): GroupedButtons => {
+    if (!buttons || !Array.isArray(buttons)) return [];
+
     return buttons.reduce((groups: Group[], button: Button, index: number) => {
+      if (!button) return groups;
+
       if (button.group) {
         const groupIndex = groups.findIndex((group) => group.groupName === button.group);
         if (groupIndex !== -1) {

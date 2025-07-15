@@ -149,17 +149,22 @@ export const getItemUrl = (item: string | SlotWithItem) => {
     // @todo validate urls and support webp
     if (metadata?.imageurl) {
       const url = `${metadata.imageurl}`;
-      // Preload the image
-      imagePreloader.preloadImage(url).catch(() => {
-        // Silently fail if preloading fails
-      });
+      // Only preload if it's a valid URL and not blacklisted
+      if (url && url !== 'none' && !imagePreloader.isBlacklisted(url)) {
+        imagePreloader.preloadImage(url).catch(() => {
+          // Silently fail if preloading fails
+        });
+      }
       return url;
     }
     if (metadata?.image) {
       const url = `${imagepath}/${metadata.image}.png`;
-      imagePreloader.preloadImage(url).catch(() => {
-        // Silently fail if preloading fails
-      });
+      // Only preload if it's a valid image path and not blacklisted
+      if (url && url !== 'none' && !imagePreloader.isBlacklisted(url)) {
+        imagePreloader.preloadImage(url).catch(() => {
+          // Silently fail if preloading fails
+        });
+      }
       return url;
     }
   }
@@ -173,22 +178,31 @@ export const getItemUrl = (item: string | SlotWithItem) => {
 
   if (!itemData) {
     const url = `${imagepath}/${itemName}.png`;
-    imagePreloader.preloadImage(url).catch(() => {
-      // Silently fail if preloading fails
-    });
+    // Only preload if it's not blacklisted
+    if (url && !imagePreloader.isBlacklisted(url)) {
+      imagePreloader.preloadImage(url).catch(() => {
+        // Silently fail if preloading fails
+      });
+    }
     return url;
   }
   if (itemData.image) {
-    imagePreloader.preloadImage(itemData.image).catch(() => {
-      // Silently fail if preloading fails
-    });
+    // Only preload if it's a valid image and not blacklisted
+    if (itemData.image && itemData.image !== 'none' && !imagePreloader.isBlacklisted(itemData.image)) {
+      imagePreloader.preloadImage(itemData.image).catch(() => {
+        // Silently fail if preloading fails
+      });
+    }
     return itemData.image;
   }
 
   itemData.image = `${imagepath}/${itemName}.png`;
-  imagePreloader.preloadImage(itemData.image).catch(() => {
-    // Silently fail if preloading fails
-  });
+  // Only preload if it's not blacklisted
+  if (itemData.image && !imagePreloader.isBlacklisted(itemData.image)) {
+    imagePreloader.preloadImage(itemData.image).catch(() => {
+      // Silently fail if preloading fails
+    });
+  }
 
   return itemData.image;
 };
