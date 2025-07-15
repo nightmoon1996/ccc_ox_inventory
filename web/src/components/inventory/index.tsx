@@ -40,16 +40,21 @@ const Inventory: React.FC = () => {
     // Preload all item images when inventory opens to prevent pop-in
     const preloadInventoryImages = (inventory?: InventoryProps) => {
       if (inventory?.items) {
+        const urls: string[] = [];
         inventory.items.forEach(item => {
           if (isSlotWithItem(item)) {
             const url = getItemUrl(item);
             if (url && url !== 'none' && !imagePreloader.isBlacklisted(url)) {
-              imagePreloader.preloadImage(url).catch(() => {
-                // Silently fail
-              });
+              urls.push(url);
             }
           }
         });
+        // Use efficient batch preloading
+        if (urls.length > 0) {
+          imagePreloader.preloadImages(urls).catch(() => {
+            // Silently fail
+          });
+        }
       }
     };
 
@@ -57,17 +62,24 @@ const Inventory: React.FC = () => {
     preloadInventoryImages(data.leftInventory);
     preloadInventoryImages(data.rightInventory);
 
-    // Also preload all possible item images from the Items store
-    Object.keys(Items).forEach(itemName => {
-      if (itemName && Items[itemName]) { // Add null check and ensure item exists
-        const url = getItemUrl(itemName);
-        if (url && url !== 'none' && !imagePreloader.isBlacklisted(url)) {
-          imagePreloader.preloadImage(url).catch(() => {
-            // Silently fail
-          });
+    // Only preload Items store images on first inventory open (when cache is empty)
+    if (imagePreloader.getCacheStats().cachedCount === 0) {
+      const itemUrls: string[] = [];
+      Object.keys(Items).forEach(itemName => {
+        if (itemName && Items[itemName]) {
+          const url = getItemUrl(itemName);
+          if (url && url !== 'none' && !imagePreloader.isBlacklisted(url)) {
+            itemUrls.push(url);
+          }
         }
+      });
+      // Use efficient batch preloading for Items store
+      if (itemUrls.length > 0) {
+        imagePreloader.preloadImages(itemUrls).catch(() => {
+          // Silently fail
+        });
       }
-    });
+    }
   });
 
   useNuiEvent('refreshSlots', (data) => dispatch(refreshSlots(data)));

@@ -87,6 +87,23 @@ class ImagePreloader {
     });
   }
 
+  // New method: Only preload if not already cached
+  preloadImageIfNeeded(url: string): Promise<void> {
+    if (this.cache.has(url)) {
+      return Promise.resolve(); // Already cached, no need to preload
+    }
+    return this.preloadImage(url);
+  }
+
+  // New method: Preload multiple images efficiently
+  preloadImages(urls: string[]): Promise<void[]> {
+    const uncachedUrls = urls.filter(url => !this.cache.has(url) && !this.isBlacklisted(url));
+    const promises = uncachedUrls.map(url => this.preloadImage(url).catch(() => {
+      // Silently fail for individual images
+    }));
+    return Promise.all(promises);
+  }
+
   isCached(url: string): boolean {
     return this.cache.has(url);
   }
@@ -99,6 +116,15 @@ class ImagePreloader {
     const urlParts = url.split('/');
     const filename = urlParts[urlParts.length - 1];
     return this.blacklist.has(filename);
+  }
+
+  // Get cache statistics
+  getCacheStats() {
+    return {
+      cachedCount: this.cache.size,
+      blacklistedCount: this.blacklist.size,
+      totalProcessed: this.cache.size + this.blacklist.size
+    };
   }
 }
 
