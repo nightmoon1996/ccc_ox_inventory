@@ -1,6 +1,7 @@
 import React, { RefObject, useRef } from 'react';
 import { DragLayerMonitor, useDragLayer, XYCoord } from 'react-dnd';
 import { DragSource } from '../../typings';
+import { useImagePreload } from '../../hooks/useImagePreload';
 
 interface DragLayerProps {
   data: DragSource;
@@ -48,6 +49,10 @@ const DragPreview: React.FC = () => {
     isDragging: monitor.isDragging(),
   }));
 
+  // Extract image URL from data.image (remove url() wrapper)
+  const imageUrl = data?.image ? data.image.replace('url(', '').replace(')', '') : undefined;
+  const { isLoaded } = useImagePreload(imageUrl);
+
   return (
     <>
       {isDragging && currentOffset && data.item && (
@@ -57,6 +62,8 @@ const DragPreview: React.FC = () => {
           style={{
             transform: `translate(${currentOffset.x}px, ${currentOffset.y}px)`,
             backgroundImage: data.image,
+            opacity: isLoaded ? 1 : 0.9, // Slightly transparent while loading
+            transition: 'opacity 0.1s ease',
           }}
         />
       )}

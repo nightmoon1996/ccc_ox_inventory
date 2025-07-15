@@ -44,10 +44,10 @@ const InventoryContext: React.FC = () => {
 
     switch (data && data.action) {
       case 'use':
-        onUse({ name: item.name, slot: item.slot });
+        onUse({ name: item.name || '', slot: item.slot });
         break;
       case 'give':
-        onGive({ name: item.name, slot: item.slot });
+        onGive({ name: item.name || '', slot: item.slot });
         break;
       case 'drop':
         isSlotWithItem(item) && onDrop({ item: item, inventory: 'player' });
@@ -116,11 +116,11 @@ const InventoryContext: React.FC = () => {
               ))}
           </Menu>
         )}
-        {((item && item.name && Items[item.name]?.buttons?.length) || 0) > 0 && (
+        {((item && item.name && Items[item.name || '']?.buttons?.length) || 0) > 0 && (
           <>
             {item &&
               item.name &&
-              groupButtons(Items[item.name]?.buttons).map((group: Group, index: number) => (
+              groupButtons(Items[item.name || '']?.buttons || []).map((group: Group, index: number) => (
                 <React.Fragment key={index}>
                   {group.groupName ? (
                     <Menu label={group.groupName}>

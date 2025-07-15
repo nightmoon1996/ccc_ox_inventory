@@ -13,7 +13,7 @@ const SlotTooltip: React.ForwardRefRenderFunction<
   { item: SlotWithItem; inventoryType: Inventory['type']; style: React.CSSProperties }
 > = ({ item, inventoryType, style }, ref) => {
   const additionalMetadata = useAppSelector((state) => state.inventory.additionalMetadata);
-  const itemData = useMemo(() => Items[item.name], [item]);
+  const itemData = useMemo(() => Items[item.name || ''], [item]);
   const ingredients = useMemo(() => {
     if (!item.ingredients) return null;
     return Object.entries(item.ingredients).sort((a, b) => a[1] - b[1]);
@@ -26,14 +26,14 @@ const SlotTooltip: React.ForwardRefRenderFunction<
       {!itemData ? (
         <div className="tooltip-wrapper" ref={ref} style={style}>
           <div className="tooltip-header-wrapper">
-            <p>{item.name}</p>
+            <p>{item.name || ''}</p>
           </div>
           <Divider />
         </div>
       ) : (
         <div style={{ ...style }} className="tooltip-wrapper" ref={ref}>
           <div className="tooltip-header-wrapper">
-            <p>{item.metadata?.label || itemData.label || item.name}</p>
+            <p>{item.metadata?.label || itemData?.label || item.name || ''}</p>
             {inventoryType === 'crafting' ? (
               <div className="tooltip-crafting-duration">
                 <ClockIcon />

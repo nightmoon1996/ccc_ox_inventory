@@ -13,6 +13,10 @@ import { closeTooltip } from '../../store/tooltip';
 import InventoryContext from './InventoryContext';
 import { closeContextMenu } from '../../store/contextMenu';
 import Fade from '../utils/transitions/Fade';
+import { imagePreloader } from '../../utils/imagePreloader';
+import { getItemUrl } from '../../helpers';
+import { isSlotWithItem } from '../../helpers';
+import { Items } from '../../store/items';
 
 const Inventory: React.FC = () => {
   const [inventoryVisible, setInventoryVisible] = useState(false);
@@ -32,6 +36,38 @@ const Inventory: React.FC = () => {
   }>('setupInventory', (data) => {
     dispatch(setupInventory(data));
     !inventoryVisible && setInventoryVisible(true);
+
+    // Preload all item images when inventory opens to prevent pop-in
+    const preloadInventoryImages = (inventory?: InventoryProps) => {
+      if (inventory?.items) {
+        inventory.items.forEach(item => {
+          if (isSlotWithItem(item)) {
+            const url = getItemUrl(item);
+            if (url) {
+              imagePreloader.preloadImage(url).catch(() => {
+                // Silently fail
+              });
+            }
+          }
+        });
+      }
+    };
+
+    // Preload images for both inventories
+    preloadInventoryImages(data.leftInventory);
+    preloadInventoryImages(data.rightInventory);
+
+    // Also preload all possible item images from the Items store
+    Object.keys(Items).forEach(itemName => {
+      if (itemName) { // Add null check
+        const url = getItemUrl(itemName);
+        if (url) {
+          imagePreloader.preloadImage(url).catch(() => {
+            // Silently fail
+          });
+        }
+      }
+    });
   });
 
   useNuiEvent('refreshSlots', (data) => dispatch(refreshSlots(data)));

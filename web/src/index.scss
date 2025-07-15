@@ -115,6 +115,12 @@ button:active {
   background-position: center;
   background-size: 7vh;
   image-rendering: -webkit-optimize-contrast;
+  // Add these properties to prevent pop-in
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  // Add a subtle transition for smoother appearance
+  transition: opacity 0.1s ease, transform 0.1s ease;
 }
 
 
@@ -544,11 +550,18 @@ button:active {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  // Add these properties to prevent pop-in
+  will-change: background-image, transform, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  // Add smooth background-image transition
+  background-image: none;
+  transition: all 0.2s ease, background-image 0.1s ease;
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.15);
     border-color: rgba(255, 255, 255, 0.3);
-    transform: translateY(-1px);
+    transform: translateY(-1px) translateZ(0);
   }
 
   // When slot has an item

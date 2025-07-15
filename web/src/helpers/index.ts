@@ -4,6 +4,7 @@ import { store } from '../store';
 import { Items } from '../store/items';
 import { imagepath } from '../store/imagepath';
 import { fetchNui } from '../utils/fetchNui';
+import { imagePreloader } from '../utils/imagePreloader';
 
 export const canPurchaseItem = (item: Slot, inventory: { type: Inventory['type']; groups: Inventory['groups'] }) => {
   if (inventory.type !== 'shop' || !isSlotWithItem(item)) return true;
@@ -146,17 +147,48 @@ export const getItemUrl = (item: string | SlotWithItem) => {
     const metadata = item.metadata;
 
     // @todo validate urls and support webp
-    if (metadata?.imageurl) return `${metadata.imageurl}`;
-    if (metadata?.image) return `${imagepath}/${metadata.image}.png`;
+    if (metadata?.imageurl) {
+      const url = `${metadata.imageurl}`;
+      // Preload the image
+      imagePreloader.preloadImage(url).catch(() => {
+        // Silently fail if preloading fails
+      });
+      return url;
+    }
+    if (metadata?.image) {
+      const url = `${imagepath}/${metadata.image}.png`;
+      imagePreloader.preloadImage(url).catch(() => {
+        // Silently fail if preloading fails
+      });
+      return url;
+    }
   }
 
   const itemName = isObj ? (item.name as string) : item;
+
+  // Add null check for itemName
+  if (!itemName) return;
+
   const itemData = Items[itemName];
 
-  if (!itemData) return `${imagepath}/${itemName}.png`;
-  if (itemData.image) return itemData.image;
+  if (!itemData) {
+    const url = `${imagepath}/${itemName}.png`;
+    imagePreloader.preloadImage(url).catch(() => {
+      // Silently fail if preloading fails
+    });
+    return url;
+  }
+  if (itemData.image) {
+    imagePreloader.preloadImage(itemData.image).catch(() => {
+      // Silently fail if preloading fails
+    });
+    return itemData.image;
+  }
 
   itemData.image = `${imagepath}/${itemName}.png`;
+  imagePreloader.preloadImage(itemData.image).catch(() => {
+    // Silently fail if preloading fails
+  });
 
   return itemData.image;
 };

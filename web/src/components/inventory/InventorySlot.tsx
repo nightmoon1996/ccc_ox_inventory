@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useEffect } from 'react';
 import { DragSource, Inventory, InventoryType, Slot, SlotWithItem } from '../../typings';
 import { useDrag, useDragDropManager, useDrop } from 'react-dnd';
 import { useAppDispatch } from '../../store';
@@ -15,6 +15,7 @@ import { ItemsPayload } from '../../reducers/refreshSlots';
 import { closeTooltip, openTooltip } from '../../store/tooltip';
 import { openContextMenu } from '../../store/contextMenu';
 import { useMergeRefs } from '@floating-ui/react';
+import { useImagePreload } from '../../hooks/useImagePreload';
 
 interface SlotProps {
   inventoryId: Inventory['id'];
@@ -31,6 +32,10 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
   const dispatch = useAppDispatch();
   const timerRef = useRef<number | null>(null);
 
+  // Get image URL and preload status
+  const imageUrl = isSlotWithItem(item) && item.name ? getItemUrl(item) : undefined;
+  const { isLoaded } = useImagePreload(imageUrl);
+
   const canDrag = useCallback(() => {
     return canPurchaseItem(item, { type: inventoryType, groups: inventoryGroups }) && canCraftItem(item, inventoryType);
   }, [item, inventoryType, inventoryGroups]);
@@ -46,7 +51,7 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
           ? {
               inventory: inventoryType,
               item: {
-                name: item.name,
+                name: item.name || '',
                 slot: item.slot,
               },
               image: item?.name && `url(${getItemUrl(item) || 'none'}`,
@@ -131,8 +136,10 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
             ? 'brightness(80%) grayscale(100%)'
             : undefined,
         opacity: isDragging ? 0.4 : 1.0,
-        backgroundImage: `url(${item?.name ? getItemUrl(item as SlotWithItem) : 'none'}`,
+        backgroundImage: imageUrl ? `url(${imageUrl})` : 'none',
         border: isOver ? '1px dashed rgba(255,255,255,0.4)' : '',
+        // Add smooth transition for image loading
+        transition: isLoaded ? 'all 0.2s ease' : 'all 0.1s ease',
       }}
     >
       {isSlotWithItem(item) && (
@@ -212,7 +219,7 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
             )}
             <div className="inventory-slot-label-box">
               <div className="inventory-slot-label-text">
-                {item.metadata?.label ? item.metadata.label : Items[item.name]?.label || item.name}
+                {item.metadata?.label ? item.metadata.label : Items[item.name || '']?.label || item.name || ''}
               </div>
             </div>
           </div>
