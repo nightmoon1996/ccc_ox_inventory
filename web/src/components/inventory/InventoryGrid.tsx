@@ -86,7 +86,7 @@ const InventoryGrid: React.FC<{ inventory: Inventory }> = ({ inventory }) => {
 
   if (isPlayerInventory) {
     return (
-      <div className="player-inventory-container" style={{ pointerEvents: isBusy ? 'none' : 'auto' }}>
+      <div className="player-inventory-container glass-surface" style={{ pointerEvents: isBusy ? 'none' : 'auto' }}>
         {/* Player Info Header */}
         <div className="player-info-header">
           <div className="player-info-left">
@@ -115,7 +115,7 @@ const InventoryGrid: React.FC<{ inventory: Inventory }> = ({ inventory }) => {
 
   return (
     <>
-      <div className="inventory-grid-wrapper" style={{ pointerEvents: isBusy ? 'none' : 'auto' }}>
+      <div className="inventory-grid-wrapper glass-surface" style={{ pointerEvents: isBusy ? 'none' : 'auto' }}>
         <div>
           <div className="inventory-grid-header-wrapper">
             <p>{inventory.label}</p>

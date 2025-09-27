@@ -139,7 +139,9 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
         backgroundImage: imageUrl ? `url(${imageUrl})` : 'none',
         border: isOver ? '1px dashed rgba(255,255,255,0.4)' : '',
         // Add smooth transition for image loading
-        transition: isLoaded ? 'all 0.2s ease' : 'all 0.1s ease',
+        transition: isLoaded
+          ? 'transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease, background-image 0.12s ease'
+          : 'transform 0.15s ease, border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease, background-image 0.1s ease',
       }}
     >
       {isSlotWithItem(item) && (
